@@ -57,16 +57,14 @@ func ReportGoroutine(name string) Goroutine {
 	}
 }
 
-const WaitForQuitGoroutinesTimeout = time.Second * 10
-
-func WaitForAllGoroutineEnd() {
+func WaitForAllGoroutineEnd(finalizeTimeout time.Duration) {
 	//	iterate all chan in reverse order
 	for i := len(waitForQuitGoroutines) - 1; i >= 0; i-- {
 		select {
 		case <-waitForQuitGoroutines[i].c:
 			logrus.Infof("Goroutine \"%s\" ended", waitForQuitGoroutines[i].name)
-		case <-time.After(WaitForQuitGoroutinesTimeout):
-			logrus.Errorf("Goroutine \"%s\" didn't end in time (%s)", waitForQuitGoroutines[i].name, WaitForQuitGoroutinesTimeout.String())
+		case <-time.After(finalizeTimeout):
+			logrus.Errorf("Goroutine \"%s\" didn't end in time (%s)", waitForQuitGoroutines[i].name, finalizeTimeout.String())
 		}
 	}
 }
