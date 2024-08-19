@@ -181,7 +181,7 @@ func (r *reporter) wsTradeErrHandler(symbol string) func(err error) {
 				}
 				return true
 			})
-			// should never happen
+			// should never happen because openWsTradeServe should retry indefinitely
 			if err != nil {
 				logrus.Fatalf("program exit because failed to open ws trade, and it sould retry indefinitely")
 			}
